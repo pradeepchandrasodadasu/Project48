@@ -4,6 +4,8 @@ class Form {
        this.input = createInput("Name");
        this.title = createElement("h1");
        this.start = createButton("Start");
+       this.resetButton = createButton("Reset")
+       this.greeting = createElement('h3')
     }
 
     //creates display function
@@ -18,6 +20,15 @@ class Form {
        //sets position of this.button
        this.start.position(width/2+120,height/2);
 
+       /*****written by SANIA ******/
+       this.resetButton.position(displayWidth - 100, 50);
+       this.resetButton.mousePressed(function(){
+           database.ref('/').set({
+               gameState : 0,
+               playerCount : 0
+           })
+       })
+
        this.start.mousePressed(()=>{
            //hides input,title and start
            this.input.hide();
@@ -28,7 +39,7 @@ class Form {
            playerCount += 1;
 
            //gives value to player.index
-           player.index += 1 ;
+           player.index = playerCount ; // made changes by SANIA
 
            //calls updateCount of player class
            player.updateCount(playerCount);
@@ -39,6 +50,10 @@ class Form {
            //calls update function of player class
            player.update();
 
+
+           this.greeting.html("Welcome to Horse Race - "+ player.name)
+           this.greeting.position(width/2-100, height/4)
+           
        });
     }
 
@@ -47,5 +62,6 @@ class Form {
         this.input.hide();
         this.title.hide();
         this.start.hide();
+        this.greeting.hide();
     }
 }
