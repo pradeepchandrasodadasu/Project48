@@ -19,12 +19,16 @@ class Game {
   }
 
   //creates start function
-  start(){
+  async start(){
     //if gameState is equal to 0 -
     if(gameState === 0){ 
       //creates playerobject & call get count function of playerobject
       player = new Horse();
-      player.getCount();
+      var playerCountRef = await database.ref('playerCount').once("value");
+      if(playerCountRef.exists()){
+        playerCount = playerCountRef.val();
+        player.getCount();
+      }
 
       //creates form object and call display function of form object
       form = new Form();
@@ -34,9 +38,9 @@ class Game {
 
     //creates sprite objects and add Image to them
     horse1 = createSprite(player.x,player.y);
-    horse1.addImage(player.image);
+    horse1.addAnimation("horse1",player.image);
     horse2 = createSprite(player.x,player.y);
-    horse2.addImage(player.image);
+    horse2.addAnimation("horse2",player.image);
     //pushes the sprite objects into horses array
     horses = [horse1,horse2];
     
@@ -61,10 +65,10 @@ class Game {
       //if right arrow pressed -
       if(keyDown(RIGHT_ARROW) && player.index !== null){
         //current player gets velocityX
-        horses[player.index].x = 5;
+        //horses[player.index-1].x += 5; 
 
         //changes animation for current player
-        horses[player.index].changeAnimation = player.animation1;
+        //horses[player.index].changeAnimation = player.animation1;
 
         //gives the value of player.velocityX 
         player.x += 5;
@@ -75,13 +79,14 @@ class Game {
        
 
         //writes the text of "You" for the current player 
-        if(horses[player.index-1] === player.index){
+        //if(horses[player.index-1] === player.index){
           fill("green");
           textSize(17);
-          text("You",horses[player.index-1].x,horses[player.index-1].y);
+          text("You",horses[player.index-1].x,horses[player.index-1].y-100);
 
           //player.addAnimation("running",player.animation1);
-        }/*else{
+       // }
+        /*else{
           player.addImage(player.image);
         }*/
 
